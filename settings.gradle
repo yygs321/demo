@@ -1,0 +1,6 @@
+rootProject.name = 'demo'
+
+include 'demo-boot'
+include 'demo-service'
+include 'demo-store'
+include 'demo-domain'
