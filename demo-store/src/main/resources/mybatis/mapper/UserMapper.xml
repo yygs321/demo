@@ -11,7 +11,7 @@
     </select>
 
     <insert id="save" parameterType="com.example.entity.User">
-        INSERT INTO user (name) VALUES (#{name})
+        INSERT INTO user (id, name) VALUES (#{id}, #{name})
     </insert>
 
     <update id="update" parameterType="com.example.entity.User">
