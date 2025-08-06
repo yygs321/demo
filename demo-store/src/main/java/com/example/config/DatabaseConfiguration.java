@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// MyBatis 설정을 스프링 부트에서 수동으로 구성할 때 사용하는 설정 클래스
 @Configuration
 @MapperScan(basePackages = "com.example.mapper") // Mapper 인터페이스가 위치할 패키지 경로를 수정
 public class DatabaseConfiguration {

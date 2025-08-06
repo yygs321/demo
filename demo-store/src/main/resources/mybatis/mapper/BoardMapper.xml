@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.BoardMapper">
 
+    <!--MyBatis에서 SQL 조회 결과를 Java 객체에 자동으로 바인딩-->
     <resultMap id="BoardWithUserMap" type="com.example.entity.Board">
         <id property="id" column="board_id"/>
         <result property="title" column="board_title"/>
