@@ -13,5 +13,5 @@ public class Board {
     private Long id;
     private String title;
     private String content;
-    private User user;
+    private Employee employee;
 }

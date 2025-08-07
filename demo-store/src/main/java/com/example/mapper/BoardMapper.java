@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface BoardMapper {
     Optional<Board> findById(Long id);
     List<Board> findAll();
-    List<Board> findByUserId(Long userId);
+    List<Board> findByEmployeeId(Long employeeId);
     List<Board> findByTitleContaining(String title);
-    Optional<Board> findOwnBoard(@Param("boardId") Long boardId, @Param("userId") Long userId);
+    Optional<Board> findOwnBoard(@Param("boardId") Long boardId, @Param("employeeId") Long employeeId);
     void save(Board board);
     void update(Board board);
     void deleteById(Long id);

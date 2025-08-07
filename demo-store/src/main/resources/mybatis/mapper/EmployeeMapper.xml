@@ -3,31 +3,31 @@
 <mapper namespace="com.example.mapper.EmployeeMapper">
 
     <select id="findById" parameterType="long" resultType="com.example.entity.Employee">
-        SELECT id, name FROM user WHERE id = #{id}
+        SELECT id, name FROM employee WHERE id = #{id}
     </select>
 
     <select id="findAll" resultType="com.example.entity.Employee">
-        SELECT id, name FROM user
+        SELECT id, name FROM employee
     </select>
 
     <insert id="save" parameterType="com.example.entity.Employee">
-        INSERT INTO user (id, name) VALUES (#{id}, #{name})
+        INSERT INTO employee (id, name) VALUES (#{id}, #{name})
     </insert>
 
     <update id="update" parameterType="com.example.entity.Employee">
-        UPDATE user SET name = #{name} WHERE id = #{id}
+        UPDATE employee SET name = #{name} WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="long">
-        DELETE FROM user WHERE id = #{id}
+        DELETE FROM employee WHERE id = #{id}
     </delete>
 
     <select id="existsById" parameterType="long" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM user WHERE id = #{id})
+        SELECT EXISTS(SELECT 1 FROM employee WHERE id = #{id})
     </select>
 
     <insert id="saveAll" parameterType="java.util.List">
-        INSERT INTO user (id, name)
+        INSERT INTO employee (id, name)
         VALUES
         <foreach collection="list" item="employee" separator=",">
             (#{employee.id}, #{employee.name})

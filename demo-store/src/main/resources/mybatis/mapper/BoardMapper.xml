@@ -3,13 +3,13 @@
 <mapper namespace="com.example.mapper.BoardMapper">
 
     <!--MyBatis에서 SQL 조회 결과를 Java 객체에 자동으로 바인딩-->
-    <resultMap id="BoardWithUserMap" type="com.example.entity.Board">
+    <resultMap id="BoardWithEmployeeMap" type="com.example.entity.Board">
         <id property="id" column="board_id"/>
         <result property="title" column="board_title"/>
         <result property="content" column="board_content"/>
-        <association property="user" javaType="com.example.entity.User">
-            <id property="id" column="user_id"/>
-            <result property="name" column="user_name"/>
+        <association property="employee" javaType="com.example.entity.Employee">
+            <id property="id" column="employee_id"/>
+            <result property="name" column="employee_name"/>
         </association>
     </resultMap>
 
@@ -17,49 +17,49 @@
         b.id AS board_id,
         b.title AS board_title,
         b.content AS board_content,
-        u.id AS user_id,
-        u.name AS user_name
+        e.id AS employee_id,
+        e.name AS employee_name
     </sql>
 
-    <select id="findById" parameterType="long" resultMap="BoardWithUserMap">
+    <select id="findById" parameterType="long" resultMap="BoardWithEmployeeMap">
         SELECT <include refid="boardColumns" />
         FROM board b
-        JOIN user u ON b.user_id = u.id
+        JOIN employee e ON b.employee_id = e.id
         WHERE b.id = #{id}
     </select>
 
-    <select id="findAll" resultMap="BoardWithUserMap">
+    <select id="findAll" resultMap="BoardWithEmployeeMap">
         SELECT <include refid="boardColumns" />
         FROM board b
-        JOIN user u ON b.user_id = u.id
+        JOIN employee e ON b.employee_id = e.id
         ORDER BY b.id DESC
     </select>
 
-    <select id="findByUserId" parameterType="long" resultMap="BoardWithUserMap">
+    <select id="findByEmployeeId" parameterType="long" resultMap="BoardWithEmployeeMap">
         SELECT <include refid="boardColumns" />
         FROM board b
-        JOIN user u ON b.user_id = u.id
-        WHERE b.user_id = #{userId}
+        JOIN employee e ON b.employee_id = e.id
+        WHERE b.employee_id = #{employeeId}
         ORDER BY b.id DESC
     </select>
 
-    <select id="findByTitleContaining" parameterType="string" resultMap="BoardWithUserMap">
+    <select id="findByTitleContaining" parameterType="string" resultMap="BoardWithEmployeeMap">
         SELECT <include refid="boardColumns" />
         FROM board b
-        JOIN user u ON b.user_id = u.id
+        JOIN employee e ON b.employee_id = e.id
         WHERE b.title LIKE CONCAT('%', #{title}, '%')
         ORDER BY b.id DESC
     </select>
 
-    <select id="findOwnBoard" resultMap="BoardWithUserMap">
+    <select id="findOwnBoard" resultMap="BoardWithEmployeeMap">
         SELECT <include refid="boardColumns" />
-        FROM board b JOIN user u ON b.user_id = u.id
-        WHERE b.id = #{boardId} AND b.user_id = #{userId}
+        FROM board b JOIN employee e ON b.employee_id = e.id
+        WHERE b.id = #{boardId} AND b.employee_id = #{employeeId}
     </select>
 
     <insert id="save" parameterType="com.example.entity.Board" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO board (title, content, user_id)
-        VALUES (#{title}, #{content}, #{user.id})
+        INSERT INTO board (title, content, employee_id)
+        VALUES (#{title}, #{content}, #{employee.id})
     </insert>
 
     <update id="update" parameterType="com.example.entity.Board">

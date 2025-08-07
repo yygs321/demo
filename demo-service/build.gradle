@@ -6,6 +6,15 @@ plugins {
 
 dependencies {
     implementation project(':demo-store')
+
+    //Transaction
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    // Apache POI for Excel
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // Apache Commons CSV for CSV
+    implementation 'org.apache.commons:commons-csv:1.10.0'
 }
 
 test {

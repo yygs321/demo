@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/boards")
+@RequestMapping("/api/boards")
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -37,7 +37,7 @@ public class BoardController {
 
     @GetMapping("/users/{userId}/boards")
     public List<Board> getBoardsByUser(@PathVariable Long userId) {
-        return boardService.getBoardsByUser(userId);
+        return boardService.getBoardsByEmployee(userId);
     }
 
     @PutMapping("/{id}")

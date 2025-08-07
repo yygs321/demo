@@ -1,13 +1,13 @@
 package com.example.service;
 
 import com.example.entity.Board;
-import com.example.exception.BoardNotFoundException; // 추가
-import com.example.exception.UserNotFoundException; // 유지
+import com.example.exception.BoardNotFoundException;
 import com.example.mapper.BoardMapper;
 import com.example.spec.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,11 +38,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> getBoardsByUser(Long userId) {
-        log.info("Finding boards by userId: {}", userId);
-        return boardMapper.findByUserId(userId);
+    public List<Board> getBoardsByEmployee(Long employeeId) {
+        log.info("Finding boards by employeeId: {}", employeeId);
+        return boardMapper.findByEmployeeId(employeeId);
     }
 
+    @Transactional
     @Override
     public Board createBoard(Board board) {
         boardMapper.save(board);
@@ -50,30 +51,32 @@ public class BoardServiceImpl implements BoardService {
         return board;
     }
 
+    @Transactional
     @Override
-    public Board updateBoard(Long boardId, Board boardDetails, Long currentUserId) {
-        Board existingBoard = getOwnedBoard(boardId, currentUserId);
+    public Board updateBoard(Long boardId, Board boardDetails, Long currentEmployeeId) {
+        Board existingBoard = getOwnedBoard(boardId, currentEmployeeId);
 
         Board updatedBoard = Board.builder()
                 .id(boardId)
                 .title(boardDetails.getTitle())
                 .content(boardDetails.getContent())
-                .user(existingBoard.getUser())
+                .employee(existingBoard.getEmployee())
                 .build();
         boardMapper.update(updatedBoard);
         log.info("Board with id: {} updated successfully", boardId);
         return updatedBoard;
     }
 
+    @Transactional
     @Override
-    public void deleteBoard(Long boardId, Long currentUserId) {
-        getOwnedBoard(boardId, currentUserId);
+    public void deleteBoard(Long boardId, Long currentEmployeeId) {
+        getOwnedBoard(boardId, currentEmployeeId);
         boardMapper.deleteById(boardId);
         log.info("Board with id: {} deleted successfully", boardId);
     }
 
-    private Board getOwnedBoard(Long boardId, Long currentUserId) {
-        return boardMapper.findOwnBoard(boardId, currentUserId)
+    private Board getOwnedBoard(Long boardId, Long currentEmployeeId) {
+        return boardMapper.findOwnBoard(boardId, currentEmployeeId)
                 .orElseThrow(() -> new SecurityException("Board not found or you are not the owner."));
     }
 }
