@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.EmployeeMapper">
+
+    <select id="findById" parameterType="long" resultType="com.example.entity.Employee">
+        SELECT id, name FROM user WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.example.entity.Employee">
+        SELECT id, name FROM user
+    </select>
+
+    <insert id="save" parameterType="com.example.entity.Employee">
+        INSERT INTO user (id, name) VALUES (#{id}, #{name})
+    </insert>
+
+    <update id="update" parameterType="com.example.entity.Employee">
+        UPDATE user SET name = #{name} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM user WHERE id = #{id})
+    </select>
+
+    <insert id="saveAll" parameterType="java.util.List">
+        INSERT INTO user (id, name)
+        VALUES
+        <foreach collection="list" item="employee" separator=",">
+            (#{employee.id}, #{employee.name})
+        </foreach>
+    </insert>
+
+</mapper>
