@@ -1,8 +1,7 @@
 package com.example.service;
 
 import com.example.entity.Board;
-import com.example.exception.BusinessException;
-import com.example.exception.BoardNotFoundException;
+import com.example.exception.NotFoundException;
 import com.example.exception.UnauthorizedException;
 import com.example.mapper.BoardMapper;
 import com.example.spec.BoardService;
@@ -26,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
     public Board getBoard(Long boardId) {
         log.info("Finding board by id: {}", boardId);
         return boardMapper.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("Board not found with id: " + boardId));
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class BoardServiceImpl implements BoardService {
         return boardMapper.findByEmployeeId(employeeId);
     }
 
-    @Transactional(noRollbackFor = BusinessException.class)
+    @Transactional
     @Override
     public Board createBoard(Board board) {
         employeeService.checkEmployeeExists(board.getEmployee().getId());
@@ -82,6 +81,6 @@ public class BoardServiceImpl implements BoardService {
 
     private Board getOwnedBoard(Long boardId, Long currentEmployeeId) {
         return boardMapper.findOwnBoard(boardId, currentEmployeeId)
-                .orElseThrow(() -> new UnauthorizedException("Board not found or you are not the owner."));
+                .orElseThrow(UnauthorizedException::new);
     }
 }

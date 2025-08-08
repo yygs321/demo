@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ApiResponse<Board> createBoard(@RequestBody Board board) {
+    public ApiResponse<Board> createBoard(@Valid @RequestBody Board board) {
         return ApiResponse.success("Board created successfully", boardService.createBoard(board));
     }
 
@@ -42,7 +44,7 @@ public class BoardController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Board> updateBoard(@PathVariable Long id, @RequestBody Board boardDetails, @RequestParam Long currentUserId) {
+    public ApiResponse<Board> updateBoard(@PathVariable Long id, @Valid @RequestBody Board boardDetails, @RequestParam Long currentUserId) {
         return ApiResponse.success("Board updated successfully", boardService.updateBoard(id, boardDetails, currentUserId));
     }
 

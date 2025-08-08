@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
@@ -26,13 +28,13 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ApiResponse<Void> createEmployee(@RequestBody Employee employee) {
+    public ApiResponse<Void> createEmployee(@Valid @RequestBody Employee employee) {
         employeeService.createEmployee(employee);
         return ApiResponse.success("Employee created successfully");
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Void> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+    public ApiResponse<Void> updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employee) {
         employeeService.updateEmployee(id, employee);
         return ApiResponse.success("Employee updated successfully");
     }
