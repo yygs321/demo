@@ -3,7 +3,6 @@ package com.example.service;
 import com.example.entity.Board;
 import com.example.exception.BusinessException;
 import com.example.exception.BoardNotFoundException;
-import com.example.exception.BusinessException;
 import com.example.exception.UnauthorizedException;
 import com.example.mapper.BoardMapper;
 import com.example.spec.BoardService;
