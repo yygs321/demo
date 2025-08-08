@@ -1,6 +1,6 @@
 package com.example.dto.response;
 
-import com.example.common.ErrorCode;
+import com.example.enums.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;

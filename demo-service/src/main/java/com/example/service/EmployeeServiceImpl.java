@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.entity.Employee;
+import com.example.exception.BusinessException;
 import com.example.exception.EmployeeNotFoundException;
 import com.example.mapper.EmployeeMapper;
 import com.example.spec.EmployeeService;

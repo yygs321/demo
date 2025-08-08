@@ -1,9 +1,13 @@
 package com.example.service;
 
 import com.example.entity.Board;
+import com.example.exception.BusinessException;
 import com.example.exception.BoardNotFoundException;
+import com.example.exception.BusinessException;
+import com.example.exception.UnauthorizedException;
 import com.example.mapper.BoardMapper;
 import com.example.spec.BoardService;
+import com.example.spec.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardMapper boardMapper;
+    private final EmployeeService employeeService;
 
     @Override
     public Board getBoard(Long boardId) {
@@ -43,9 +48,10 @@ public class BoardServiceImpl implements BoardService {
         return boardMapper.findByEmployeeId(employeeId);
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = BusinessException.class)
     @Override
     public Board createBoard(Board board) {
+        employeeService.checkEmployeeExists(board.getEmployee().getId());
         boardMapper.save(board);
         log.info("New board created with id: {}", board.getId());
         return board;
@@ -77,6 +83,6 @@ public class BoardServiceImpl implements BoardService {
 
     private Board getOwnedBoard(Long boardId, Long currentEmployeeId) {
         return boardMapper.findOwnBoard(boardId, currentEmployeeId)
-                .orElseThrow(() -> new SecurityException("Board not found or you are not the owner."));
+                .orElseThrow(() -> new UnauthorizedException("Board not found or you are not the owner."));
     }
 }

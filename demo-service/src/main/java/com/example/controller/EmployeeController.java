@@ -1,9 +1,9 @@
 package com.example.controller;
 
+import com.example.dto.response.ApiResponse;
 import com.example.entity.Employee;
 import com.example.spec.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,32 +16,30 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+    public ApiResponse<Employee> getEmployeeById(@PathVariable Long id) {
+        return ApiResponse.success(employeeService.getEmployeeById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return ResponseEntity.ok(employees);
+    public ApiResponse<List<Employee>> getAllEmployees() {
+        return ApiResponse.success(employeeService.getAllEmployees());
     }
 
     @PostMapping
-    public ResponseEntity<Void> createEmployee(@RequestBody Employee employee) {
+    public ApiResponse<Void> createEmployee(@RequestBody Employee employee) {
         employeeService.createEmployee(employee);
-        return ResponseEntity.ok().build();
+        return ApiResponse.success(null);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+    public ApiResponse<Void> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
         employeeService.updateEmployee(id, employee);
-        return ResponseEntity.ok().build();
+        return ApiResponse.success(null);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ApiResponse<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
-        return ResponseEntity.ok().build();
+        return ApiResponse.success(null);
     }
 }
