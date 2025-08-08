@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UploadHistoryMapper">
+
+    <insert id="save" parameterType="com.example.entity.UploadHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO upload_history (file_name, file_hash, status, processed_at)
+        VALUES (#{fileName}, #{fileHash}, #{status}, #{processedAt})
+    </insert>
+
+    <select id="findByFileNameAndFileHash" resultType="com.example.entity.UploadHistory">
+        SELECT id, file_name, file_hash, status, processed_at
+        FROM upload_history
+        WHERE file_name = #{fileName} AND file_hash = #{fileHash}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE upload_history
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -11,7 +11,7 @@
     </select>
 
     <insert id="save" parameterType="com.example.entity.Employee">
-        INSERT INTO employee (id, name) VALUES (#{id}, #{name})
+        INSERT IGNORE INTO employee (id, name) VALUES (#{id}, #{name})
     </insert>
 
     <update id="update" parameterType="com.example.entity.Employee">

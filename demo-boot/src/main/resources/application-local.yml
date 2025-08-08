@@ -12,3 +12,17 @@ mybatis:
   config-location: classpath:mybatis/mapperConfig/mapperConfig.xml
   mapper-locations: classpath:mybatis/mapper/**/*.xml
   type-aliases-package: com.example.entity
+
+# Scheduling
+  task:
+    scheduling:
+      pool:
+        size: 5
+      thread-name-prefix: file-polling-
+
+# File Upload Directories
+file:
+  upload:
+    incoming-dir: ${UPLOAD_INCOMING_DIR}
+    processed-dir: ${UPLOAD_PROCESSED_DIR}
+    error-dir: ${UPLOAD_ERROR_DIR}
