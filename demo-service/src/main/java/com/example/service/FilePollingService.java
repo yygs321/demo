@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +43,7 @@ public class FilePollingService {
     // 30초마다 자동 실행
     @Scheduled(cron = "*/30 * * * * *")
     public void pollIncomingDirectory() {
-        log.info("Polling incoming directory: {}", incomingDir);
+        log.info("폴링 시작: {}", incomingDir);
         File folder = new File(incomingDir);
         File[] listOfFiles = folder.listFiles();
 
@@ -57,7 +56,6 @@ public class FilePollingService {
         }
     }
 
-    @Transactional
     public void processFile(File file) {
         String fileName = file.getName();
         String fileHash = null;
@@ -67,9 +65,9 @@ public class FilePollingService {
             fileHash = FileHashUtil.calculateSha256(file.getAbsolutePath());
             Optional<UploadHistory> existingHistory = uploadHistoryMapper.findByFileNameAndFileHash(fileName, fileHash);
 
-            // 완료된 파일이면 prossed 디렉토리로 이동
+            // 이미 완료된 파일이면 prossed 디렉토리로 이동
             if (existingHistory.isPresent() && "COMPLETED".equals(existingHistory.get().getStatus())) {
-                log.info("File {} (hash: {}) already processed and completed. Moving to processed directory.", fileName, fileHash);
+                log.info("파일 {} 는 이미 처리 완료되었습니다.", fileName);
                 moveFile(file, processedDir);
                 return;
             }
@@ -82,23 +80,29 @@ public class FilePollingService {
                     .build();
             uploadHistoryMapper.save(history);
 
-            // EmployeeFileHandler에 파일 처리 위임
+            boolean hasErrors;
+            // EmployeeFileHandler에 파일 처리 위임 (DB 저장 및 오류 파일 생성 포함)
             try (InputStream inputStream = new FileInputStream(file)) {
-                employeeFileHandler.handleFile(inputStream, fileName);
+                hasErrors = employeeFileHandler.handleFile(inputStream, fileName);
             }
 
-            uploadHistoryMapper.updateStatus(history.getId(), "COMPLETED");
-            moveFile(file, processedDir);
-            log.info("File {} processed successfully. Moved to processed directory.", fileName);
+            if (hasErrors) {
+                // 오류가 있었으면 FAILED 처리하고 errorDir로 이동
+                uploadHistoryMapper.updateStatus(history.getId(), "FAILED");
+                moveFile(file, errorDir);
+            } else {
+                // 오류가 없었으면 COMPLETED 처리하고 processedDir로 이동
+                uploadHistoryMapper.updateStatus(history.getId(), "COMPLETED");
+                moveFile(file, processedDir);
+                log.info("파일 {} 처리가 성공적으로 완료되었습니다.", fileName);
+            }
 
         } catch (IOException | NoSuchAlgorithmException e) {
-            log.error("Error processing file {}: {}", fileName, e.getMessage());
             if (history != null) {
                 uploadHistoryMapper.updateStatus(history.getId(), "FAILED");
             }
             moveFile(file, errorDir);
         } catch (Exception e) {
-            log.error("Unexpected error during file processing {}: {}", fileName, e.getMessage());
             if (history != null) {
                 uploadHistoryMapper.updateStatus(history.getId(), "FAILED");
             }
@@ -112,7 +116,7 @@ public class FilePollingService {
             Path destinationPath = Paths.get(destinationDir, file.getName());
             Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.error("Failed to move file {} to {}: {}", file.getName(), destinationDir, e.getMessage());
+            log.error("파일 {}을 {}로 이동하는 데 실패했습니다: {}", file.getName(), destinationDir, e.getMessage());
         }
     }
 }

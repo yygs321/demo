@@ -1,0 +1,19 @@
+package com.example.dto;
+
+import com.example.entity.Employee;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+import java.util.Map;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ParsingResult {
+    private Map<String, Employee> employeesToSave;
+    private List<String> rawErrorLines;
+}

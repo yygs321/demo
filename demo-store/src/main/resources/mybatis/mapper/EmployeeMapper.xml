@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.EmployeeMapper">
 
-    <select id="findById" parameterType="long" resultType="com.example.entity.Employee">
+    <select id="findById" resultType="com.example.entity.Employee">
         SELECT id, name FROM employee WHERE id = #{id}
     </select>
 
@@ -11,27 +13,35 @@
     </select>
 
     <insert id="save" parameterType="com.example.entity.Employee">
-        INSERT IGNORE INTO employee (id, name) VALUES (#{id}, #{name})
+        INSERT INTO employee (id, name) VALUES (#{id}, #{name})
+    </insert>
+
+    <insert id="saveAll">
+        INSERT INTO employee (id, name) VALUES
+        <foreach collection="employees" item="employee" separator=",">
+            (#{employee.id}, #{employee.name})
+        </foreach>
     </insert>
 
     <update id="update" parameterType="com.example.entity.Employee">
         UPDATE employee SET name = #{name} WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById">
         DELETE FROM employee WHERE id = #{id}
     </delete>
 
-    <select id="existsById" parameterType="long" resultType="boolean">
+    <select id="existsById" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM employee WHERE id = #{id})
     </select>
 
-    <insert id="saveAll" parameterType="java.util.List">
-        INSERT INTO employee (id, name)
-        VALUES
-        <foreach collection="list" item="employee" separator=",">
-            (#{employee.id}, #{employee.name})
+    <select id="findExistingIds" resultType="long">
+        SELECT id
+        FROM employee
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
         </foreach>
-    </insert>
+    </select>
 
 </mapper>

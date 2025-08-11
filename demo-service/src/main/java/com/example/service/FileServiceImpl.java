@@ -25,7 +25,8 @@ public class FileServiceImpl implements FileService {
         if (file == null || file.isEmpty()) {
             throw new InvalidFileException(ResultCode.FILE_IS_EMPTY);
         }
+        // EmployeeFileHandler에 파일 처리 위임 (DB 저장 및 오류 파일 생성 포함)
         employeeFileHandler.handleFile(file.getInputStream(), file.getOriginalFilename());
-        log.info("File {} uploaded and processed successfully.", file.getOriginalFilename());
+        log.info("파일 {} 업로드 및 처리가 완료되었습니다.", file.getOriginalFilename());
     }
 }

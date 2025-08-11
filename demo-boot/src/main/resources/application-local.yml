@@ -20,10 +20,12 @@ mybatis:
         size: 5
       thread-name-prefix: file-polling-
 
-# File Upload Directories
+# File Directories
 file:
   upload:
     incoming-dir: ${UPLOAD_INCOMING_DIR:C:/Users/누리/Desktop/project/upload/incoming}
     processed-dir: ${UPLOAD_PROCESSED_DIR:C:/Users/누리/Desktop/project/upload/processed}
     error-dir: ${UPLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/upload/error}
+  download:
+    error-dir: ${DOWNLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/download/error}
 
