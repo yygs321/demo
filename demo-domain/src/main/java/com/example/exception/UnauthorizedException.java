@@ -1,7 +1,9 @@
 package com.example.exception;
 
-public class UnauthorizedException extends BusinessException {
-    public UnauthorizedException(String message) {
-        super(message);
+import com.example.enums.ResultCode;
+
+public class UnauthorizedException extends BaseException {
+    public UnauthorizedException() {
+        super(ResultCode.UNAUTHORIZED, "Action not authorized");
     }
 }

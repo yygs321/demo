@@ -19,6 +19,6 @@ public class FileController {
     @PostMapping(value = "/upload/employees", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> uploadEmployees(@RequestParam("file") MultipartFile file) throws IOException {
         fileService.uploadEmployees(file);
-        return ApiResponse.success("Employees uploaded successfully from " + file.getOriginalFilename());
+        return ApiResponse.success("File uploaded successfully", "Employees uploaded successfully from " + file.getOriginalFilename());
     }
 }

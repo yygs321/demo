@@ -1,8 +1,9 @@
 package com.example.service;
 
 import com.example.entity.Employee;
-import com.example.exception.BusinessException;
-import com.example.exception.EmployeeNotFoundException;
+import com.example.exception.ConflictException;
+import com.example.exception.NotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import com.example.mapper.EmployeeMapper;
 import com.example.spec.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +23,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeById(Long id) {
         Employee employee = employeeMapper.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
+                .orElseThrow(NotFoundException::new);
         log.info("Employee found: id={}, name={}", employee.getId(), employee.getName());
         return employee;
     }
 
     @Override
     public List<Employee> getAllEmployees() {
+        log.info("Fetching all employees");
         return employeeMapper.findAll();
     }
 
     @Transactional
     @Override
     public void createEmployee(Employee employee) {
-        employeeMapper.save(employee);
-        log.info("Employee created: id={}, name={}", employee.getId(), employee.getName());
+        try {
+            employeeMapper.save(employee);
+            log.info("Employee created: id={}, name={}", employee.getId(), employee.getName());
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("Employee with ID " + employee.getId() + " already exists.");
+        }
     }
 
     @Transactional
@@ -65,7 +71,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void checkEmployeeExists(Long id) {
         if (!employeeMapper.existsById(id)) {
-            throw new EmployeeNotFoundException(id);
+            log.warn("Employee not found with id: {}", id);
+            throw new NotFoundException();
         }
     }
 }

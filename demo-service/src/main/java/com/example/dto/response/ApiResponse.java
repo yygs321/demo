@@ -1,5 +1,6 @@
 package com.example.dto.response;
 
+import com.example.enums.ResultCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
@@ -7,27 +8,32 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
-    private final String status;
+    private final String code;
+    private String message;
     private T data;
-    private ErrorResponse error;
 
-    // Success
-    private ApiResponse(T data) {
-        this.status = "success";
+    // Success with message and data
+    private ApiResponse(String code, String message, T data) {
+        this.code = code;
+        this.message = message;
         this.data = data;
     }
 
-    // Fail
-    private ApiResponse(ErrorResponse error) {
-        this.status = "fail";
-        this.error = error;
+    // Static factory methods for success
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return new ApiResponse<>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(data);
+        return new ApiResponse<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getUserMessage(), data);
     }
 
-    public static ApiResponse<Object> fail(ErrorResponse error) {
-        return new ApiResponse<>(error);
+    public static <T> ApiResponse<T> success(String message) {
+        return new ApiResponse<>(ResultCode.SUCCESS.getCode(), message, null);
+    }
+
+    // Static factory method for fail
+    public static ApiResponse<Object> fail(ResultCode resultCode, String message) {
+        return new ApiResponse<>(resultCode.getCode(), message, null);
     }
 }
