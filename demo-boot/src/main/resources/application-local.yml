@@ -23,6 +23,7 @@ mybatis:
 # File Upload Directories
 file:
   upload:
-    incoming-dir: ${UPLOAD_INCOMING_DIR}
-    processed-dir: ${UPLOAD_PROCESSED_DIR}
-    error-dir: ${UPLOAD_ERROR_DIR}
+    incoming-dir: ${UPLOAD_INCOMING_DIR:C:/Users/누리/Desktop/project/upload/incoming}
+    processed-dir: ${UPLOAD_PROCESSED_DIR:C:/Users/누리/Desktop/project/upload/processed}
+    error-dir: ${UPLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/upload/error}
+

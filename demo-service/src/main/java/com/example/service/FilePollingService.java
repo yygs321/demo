@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.entity.UploadHistory;
 import com.example.mapper.UploadHistoryMapper;
+import com.example.service.handler.EmployeeFileHandler;
 import com.example.util.FileHashUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class FilePollingService {
     private String errorDir;
 
     private final UploadHistoryMapper uploadHistoryMapper;
-    private final EmployeeFileHandler employeeFileHandler; // EmployeeMapper 대신 주입
+    private final EmployeeFileHandler employeeFileHandler;
 
     // 30초마다 자동 실행
     @Scheduled(cron = "*/30 * * * * *")
@@ -65,6 +67,7 @@ public class FilePollingService {
             fileHash = FileHashUtil.calculateSha256(file.getAbsolutePath());
             Optional<UploadHistory> existingHistory = uploadHistoryMapper.findByFileNameAndFileHash(fileName, fileHash);
 
+            // 완료된 파일이면 prossed 디렉토리로 이동
             if (existingHistory.isPresent() && "COMPLETED".equals(existingHistory.get().getStatus())) {
                 log.info("File {} (hash: {}) already processed and completed. Moving to processed directory.", fileName, fileHash);
                 moveFile(file, processedDir);

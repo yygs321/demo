@@ -1,6 +1,8 @@
-package com.example.service;
+package com.example.service.handler;
 
 import com.example.entity.Employee;
+import com.example.enums.ResultCode;
+import com.example.exception.InvalidFileException;
 import com.example.mapper.EmployeeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,7 @@ public class EmployeeFileHandler {
         } else if ("xlsx".equalsIgnoreCase(extension)) {
             employees = parseExcel(inputStream);
         } else {
-            throw new IllegalArgumentException("Unsupported file format: " + extension);
+            throw new InvalidFileException(ResultCode.INVALID_FILE_FORMAT);
         }
 
         if (employees != null && !employees.isEmpty()) {
@@ -48,6 +50,8 @@ public class EmployeeFileHandler {
 
     private List<Employee> parseExcel(InputStream inputStream) throws IOException {
         List<Employee> employees = new ArrayList<>();
+
+        //.xlsx 파일 읽어오기
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
@@ -72,8 +76,14 @@ public class EmployeeFileHandler {
                     try {
                         id = Long.parseLong(idCell.getStringCellValue());
                     } catch (NumberFormatException e) {
-                        log.error("Invalid ID format: {}", idCell.getStringCellValue());
-                        continue;
+                        String errorMessage = String.format(
+                                "Row %d: Invalid ID format for value '%s'",
+                                currentRow.getRowNum() + 1,
+                                idCell.getStringCellValue()
+                        );
+                        log.error(errorMessage, e);
+                        throw new InvalidFileException(ResultCode.UNPROCESSABLE_ENTITY, errorMessage);
+
                     }
                 }
 
@@ -101,10 +111,20 @@ public class EmployeeFileHandler {
                         employees.add(Employee.builder().id(id).name(name).build());
                     }
                 } catch (NumberFormatException e) {
-                    log.error("Invalid ID format in CSV: {}", csvRecord.get("ID"));
+                    String errorMessage = String.format(
+                            "Row %d: Invalid ID format in CSV for value '%s'",
+                            csvRecord.getRecordNumber() + 1,
+                            csvRecord.get("ID")
+                    );
+                    log.error(errorMessage, e);
+                    throw new InvalidFileException(ResultCode.UNPROCESSABLE_ENTITY, errorMessage);
+
                 } catch (IllegalArgumentException e) {
-                    log.error("Missing header in CSV (ID or Name): {}", e.getMessage());
+                    String errorMessage = "Required column 'ID' or 'Name' is missing.";
+                    log.error(errorMessage, e);
+                    throw new InvalidFileException(ResultCode.UNPROCESSABLE_ENTITY, errorMessage);
                 }
+
             }
         }
         return employees;

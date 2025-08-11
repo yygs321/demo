@@ -12,6 +12,9 @@ public enum ResultCode {
 
     // Client Errors
     BAD_REQUEST("400", "Bad Request", "잘못된 요청입니다."),
+    INVALID_FILE_FORMAT("400", "Invalid File Format", "지원하지 않는 파일 형식입니다."),
+    FILE_IS_EMPTY("400", "File Is Empty", "파일이 비어있거나 내용이 없습니다."),
+
     UNAUTHORIZED("401", "Unauthorized", "인증되지 않은 요청입니다."),
     FORBIDDEN("403", "Forbidden", "접근 권한이 없습니다."),
     NOT_FOUND("404", "Not Found", "요청한 리소스를 찾을 수 없습니다."),

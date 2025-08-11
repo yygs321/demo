@@ -1,5 +1,8 @@
 package com.example.service;
 
+import com.example.enums.ResultCode;
+import com.example.exception.InvalidFileException;
+import com.example.service.handler.EmployeeFileHandler;
 import com.example.spec.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +23,7 @@ public class FileServiceImpl implements FileService {
     @Transactional
     public void uploadEmployees(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty or null.");
+            throw new InvalidFileException(ResultCode.FILE_IS_EMPTY);
         }
         employeeFileHandler.handleFile(file.getInputStream(), file.getOriginalFilename());
         log.info("File {} uploaded and processed successfully.", file.getOriginalFilename());
