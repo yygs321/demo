@@ -16,7 +16,6 @@ build_jar_job:
     paths:
       - .gradle/
   before_script:
-    - set -euxo pipefail # 디버깅을 위한 쉘 옵션 (명령어 출력, 에러 시 즉시 종료)
     - chmod +x ./gradlew #파일에 실행 권한 부여
     - echo "--- 현재 디렉토리 구조 ---"
     - ls -alR .
