@@ -4,6 +4,10 @@ plugins {
     id 'java'
 }
 
+// bootJar 태스크에 mainClass 명시적으로 설정
+bootJar {
+    mainClass = 'com.example.Main'
+}
 
 dependencies {
     implementation project(':demo-service')
