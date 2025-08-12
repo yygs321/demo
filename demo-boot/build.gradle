@@ -2,11 +2,6 @@ plugins {
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'java'
-    id 'application'
-}
-
-application {
-    mainClass.set('com.example.Main')
 }
 
 dependencies {

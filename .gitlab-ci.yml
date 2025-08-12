@@ -9,7 +9,7 @@ stages:
 # 빌드 작업: 코드를 컴파일하고 JAR 파일을 생성
 build_jar_job:
   stage: build_jar
-  image: gradle:8.13-jdk17
+  image: gradle:8.14-jdk17
   variables:
     GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   cache:
@@ -19,7 +19,7 @@ build_jar_job:
     - chmod +x ./gradlew #파일에 실행 권한 부여
   script:
     - echo "--- Gradle 빌드 시작 ---" # Gradle 빌드 시작
-    - ./gradlew build -x test
+    - ./gradlew :demo-boot:bootJar -x test --info --refresh-dependencies
     - echo "--- Gradle 빌드 완료 ---" # Gradle 빌드 완료
   artifacts:
     paths:
