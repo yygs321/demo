@@ -27,6 +27,7 @@ file:
     processed-dir: ${UPLOAD_PROCESSED_DIR:C:/Users/누리/Desktop/project/upload/processed}
     error-dir: ${UPLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/upload/error}
   download:
+    processed-dir: ${DOWNLOAD_PROCESSED_DIR:C:/Users/누리/Desktop/project/download/processed}
     error-dir: ${DOWNLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/download/error}
 
 # Scheduling

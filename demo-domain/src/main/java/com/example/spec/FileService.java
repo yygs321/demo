@@ -6,4 +6,5 @@ import java.io.IOException;
 
 public interface FileService {
     void uploadEmployees(MultipartFile file) throws IOException;
+    void exportEmployees(Long employeeId);
 }
