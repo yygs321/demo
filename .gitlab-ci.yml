@@ -17,8 +17,6 @@ build_jar_job:
       - .gradle/
   before_script:
     - chmod +x ./gradlew #파일에 실행 권한 부여
-    - echo "--- 현재 디렉토리 구조 ---"
-    - ls -alR .
   script:
     - echo "--- Gradle 빌드 시작 ---" # Gradle 빌드 시작
     - ./gradlew build -x test --info # --info 옵션으로 더 자세한 로그 출력
