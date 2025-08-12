@@ -3,7 +3,7 @@ image: gradle:8.5-jdk17
 
 stages:
   - build_jar
-#  - build_image
+  - build_image
 #  - deploy
 
 # 빌드 작업: 코드를 컴파일하고 JAR 파일을 생성
@@ -26,17 +26,17 @@ build_jar_job:
       - 'demo-boot/build/libs/*.jar'
     expire_in: 1 week
 
-#build_image_job:
-#  stage: build_image
-#  needs: ["build_jar_job"] #jar생성이 완료된 후에만 작동
-#  before_script:
-#    - sed -i "s/PROJECT_NAME/$CI_PROJECT_NAME/g" Dockerfile
-#    - pwd
-#    - ls -alhF
-#    - ls -alhF demo-boot/build/libs/
-#  script:
-#    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_ID" --password-stdin "$CI_REGISTRY"
-#    - docker build -t "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" .
-#    - docker tag "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
-#    - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}"
-#    - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
+build_image_job:
+  stage: build_image
+  needs: ["build_jar_job"] #jar생성이 완료된 후에만 작동
+  before_script:
+    - sed -i "s/PROJECT_NAME/$CI_PROJECT_NAME/g" Dockerfile
+    - pwd
+    - ls -alhF
+    - ls -alhF demo-boot/build/libs/
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_ID" --password-stdin "$CI_REGISTRY"
+    - docker build -t "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" .
+    - docker tag "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
+    - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}"
+    - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
