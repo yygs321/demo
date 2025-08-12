@@ -19,7 +19,7 @@ build_jar_job:
     - chmod +x ./gradlew #파일에 실행 권한 부여
   script:
     - echo "--- Gradle 빌드 시작 ---" # Gradle 빌드 시작
-    - ./gradlew build -x test --info # --info 옵션으로 더 자세한 로그 출력
+    - ./gradlew build -x test
     - echo "--- Gradle 빌드 완료 ---" # Gradle 빌드 완료
   artifacts:
     paths:
