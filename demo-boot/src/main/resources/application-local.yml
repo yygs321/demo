@@ -29,3 +29,6 @@ file:
   download:
     error-dir: ${DOWNLOAD_ERROR_DIR:C:/Users/누리/Desktop/project/download/error}
 
+# Scheduling
+polling:
+  cron: "*/30 * * * * *"

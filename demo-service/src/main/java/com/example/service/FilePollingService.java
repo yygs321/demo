@@ -41,7 +41,7 @@ public class FilePollingService {
     private final EmployeeFileHandler employeeFileHandler;
 
     // 30초마다 자동 실행
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "${polling.cron}")
     public void pollIncomingDirectory() {
         log.info("폴링 시작: {}", incomingDir);
         File folder = new File(incomingDir);
