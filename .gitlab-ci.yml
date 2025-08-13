@@ -36,10 +36,9 @@ docker_build_job:
   needs: [ "jar_build_job" ] # jar생성 job이 완료된 후에만 작동
   image: docker:latest
   services:
-    - name: docker:dind
-      alias: docker
+    - docker:dind
   variables:
-    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_HOST: tcp://docker-dind:2375/
     DOCKER_TLS_CERTDIR: ""
   before_script:
     - echo "📌 [docker_build 단계 시작] ===================================="
