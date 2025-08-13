@@ -35,6 +35,7 @@ jar_build:
 docker_build:
   stage: docker_build
   needs: [ "jar_build" ] # jar생성 job이 완료된 후에만 작동
+  image: docker:latest
   before_script:
     - echo "📌 [docker_build 단계 시작] ===================================="
     - sleep 20
