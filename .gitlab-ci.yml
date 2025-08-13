@@ -4,7 +4,7 @@ stages:
   - docker_build
 
 # JAR 파일을 빌드하는 작업
-jar_build_job:
+jar_build:
   stage: build_jar
   image: gradle:8.14-jdk17
   rules:
@@ -24,16 +24,17 @@ jar_build_job:
     - chmod +x ./gradlew
   script:
     - echo "📦 Gradle 빌드 시작..."
-    - ./gradlew :demo-boot:bootJar -x test
+    - ./gradlew clean build -x test
+
     - echo "✅ Gradle 빌드 완료"
   artifacts:
     paths:
       - 'demo-boot/build/libs/*.jar'
     expire_in: 1 days
 
-docker_build_job:
+docker_build:
   stage: docker_build
-  needs: [ "jar_build_job" ] # jar생성 job이 완료된 후에만 작동
+  needs: [ "jar_build" ] # jar생성 job이 완료된 후에만 작동
   image: docker:latest
   services:
     - docker:dind
