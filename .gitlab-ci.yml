@@ -4,7 +4,7 @@ stages:
   - docker_build
 
 # JAR 파일을 빌드하는 작업
-jar_build:
+jar_build_job:
   stage: build_jar
   image: gradle:8.14-jdk17
   rules:
@@ -31,9 +31,9 @@ jar_build:
       - 'demo-boot/build/libs/*.jar'
     expire_in: 1 days
 
-docker_build:
+docker_build_job:
   stage: docker_build
-  needs: ["jar_build"] #jar생성이 완료된 후에만 작동
+  needs: ["build_jar"] #jar생성이 완료된 후에만 작동
   image: docker:latest
   services:
     - docker:dind
