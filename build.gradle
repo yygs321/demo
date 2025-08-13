@@ -20,7 +20,7 @@ allprojects {
 }
 
 
-subprojects {
+allprojects {
     apply plugin: 'java'
 
     configurations {
@@ -45,6 +45,11 @@ subprojects {
     }
 }
 
+project(':demo-boot') {
+    bootJar {
+        mainClass = 'com.example.Main'
+    }
+}
 
 
 tasks.named('test') {
