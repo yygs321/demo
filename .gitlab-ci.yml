@@ -37,8 +37,14 @@ build_image_job:
     - ls -alhF
     - ls -alhF demo-boot/build/libs/
   script:
+    - echo "--- Docker 로그인 시작 ---"
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_ID" --password-stdin "$CI_REGISTRY"
+    - echo "--- Docker 빌드 시작 ---"
     - docker build -t "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" .
+    - echo "--- Docker 빌드 완료, 태깅 시작 ---"
     - docker tag "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
+    - echo "--- Docker 이미지 push (버전 태그) 시작 ---"
     - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}"
+    - echo "--- Docker 이미지 push (latest 태그) 시작 ---"
     - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
+    - echo "--- 모든 Docker 작업 완료 ---"
