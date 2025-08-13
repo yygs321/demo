@@ -1,52 +1,60 @@
-# build.gradle에 명시된 대로 JDK 17이 포함된 Gradle 이미지를 사용
-image: gradle:8.5-jdk17
-
+# 실행할 단계(Stage)들을 정의합니다.
 stages:
   - build_jar
-  - build_image
-#  - deploy
+  - docker_build
 
-# 빌드 작업: 코드를 컴파일하고 JAR 파일을 생성
-build_jar_job:
+# JAR 파일을 빌드하는 작업
+jar_build:
   stage: build_jar
   image: gradle:8.14-jdk17
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      when: always
+    - when: manual
   variables:
     GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   cache:
+    key: "$CI_COMMIT_REF_SLUG"
     paths:
       - .gradle/
   before_script:
-    - chmod +x ./gradlew #파일에 실행 권한 부여
+    - echo "📌 [jar_build 단계 시작] ====================================="
+    - chmod +x ./gradlew
   script:
-    - echo "--- Gradle 빌드 시작 ---" # Gradle 빌드 시작
-    - ./gradlew clean :demo-boot:bootJar -x test
-    - echo "--- Gradle 빌드 완료 ---" # Gradle 빌드 완료
+    - echo "📦 Gradle 빌드 시작..."
+    - ./gradlew :demo-boot:bootJar -x test
+    - echo "✅ Gradle 빌드 완료"
   artifacts:
     paths:
       - 'demo-boot/build/libs/*.jar'
     expire_in: 1 days
 
+<<<<<<< HEAD
 build_image_job:
-  stage: build_image
-  needs: ["build_jar_job"] #jar생성이 완료된 후에만 작동
+  stage: docker_build
+  needs: ["jar_build"] #jar생성이 완료된 후에만 작동
   image: docker:latest
+  services:
+    - docker:dind
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_TLS_CERTDIR: ""
   before_script:
-    - sed -i "s/PROJECT_NAME/$CI_PROJECT_NAME/g" Dockerfile
-    - pwd
-    - ls -alhF
+    - echo "📌 [docker_build 단계 시작] ====================================="
+    - sleep 20
     - ls -alhF demo-boot/build/libs/
   script:
-    - echo "--- Docker 로그인 시작 ---"
+    - echo "🔐 Docker 레지스트리 로그인 시작..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_ID" --password-stdin "$CI_REGISTRY"
-    - echo "--- Docker 빌드 시작 ---"
+    - echo "🐳 Docker 이미지 빌드 시작..."
+    # CI/CD 설정에 등록된 DOCKER_IMAGE_NAME 변수를 사용하도록 수정
     - docker build -t "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" .
-    - echo "--- Docker 빌드 완료, 태깅 시작 ---"
+    - echo "🏷️ Docker 이미지 태깅..."
     - docker tag "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
-    - echo "--- Docker 이미지 push (버전 태그) 시작 ---"
+    - echo "🚀 Docker 이미지 푸시 (버전 태그)..."
     - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}"
-    - echo "--- Docker 이미지 push (latest 태그) 시작 ---"
+    - echo "🚀 Docker 이미지 푸시 (latest 태그)..."
     - docker push "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest"
-    - echo "--- 모든 Docker 작업 완료 ---"
+    - echo "✅ 모든 Docker 작업 완료"
