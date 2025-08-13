@@ -33,7 +33,7 @@ jar_build_job:
 
 docker_build_job:
   stage: docker_build
-  needs: ["build_jar"] #jar생성이 완료된 후에만 작동
+  needs: ["jar_build_job"] #jar생성이 완료된 후에만 작동
   image: docker:latest
   services:
     - docker:dind
