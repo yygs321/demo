@@ -39,7 +39,7 @@ docker_build:
   services:
     - docker:dind
   variables:
-    DOCKER_HOST: tcp://docker-dind:2375/
+    DOCKER_HOST: tcp://docker:2375/
     DOCKER_TLS_CERTDIR: ""
   before_script:
     - echo "📌 [docker_build 단계 시작] ===================================="
