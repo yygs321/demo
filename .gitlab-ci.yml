@@ -29,8 +29,10 @@ build_jar_job:
 build_image_job:
   stage: build_image
   needs: ["build_jar_job"] #jar생성이 완료된 후에만 작동
-  services:
-    - docker:dind
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - sed -i "s/PROJECT_NAME/$CI_PROJECT_NAME/g" Dockerfile
     - pwd
