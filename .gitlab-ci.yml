@@ -41,7 +41,6 @@ docker_build_job:
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_TLS_CERTDIR: ""
-  privileged: true #특권 모드
   before_script:
     - echo "📌 [docker_build 단계 시작] ===================================="
     - sleep 20
