@@ -31,8 +31,7 @@ jar_build:
       - 'demo-boot/build/libs/*.jar'
     expire_in: 1 days
 
-<<<<<<< HEAD
-build_image_job:
+docker_build:
   stage: docker_build
   needs: ["jar_build"] #jar생성이 완료된 후에만 작동
   image: docker:latest
