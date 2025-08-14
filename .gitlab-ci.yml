@@ -66,14 +66,16 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -   # 환경변수 개인키 추가
   script:
     - echo "🔐 사내 서버 접속 및 Docker 배포 준비..."
-    - ssh -p "$DEPLOY_SSH_PORT" -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER_IP"
-    - echo "🔐 Docker 레지스트리 로그인 시작..." &&
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_ID" --password-stdin "$CI_REGISTRY" &&
-    - echo "🐳 Docker 이미지 pull 시작..." &&
-    - docker pull "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" &&
-    - echo "⏹️ 기존 컨테이너 중지 및 삭제..." &&
-    - docker stop demo-app || true &&
-    - docker rm demo-app || true &&
-    - echo "🚀 새 컨테이너 실행..." &&
-    - docker run -d --name demo-app -p "$DEPLOY_APP_PORT:8080" "${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}" &&
-    - echo "✅ 배포 완료"
+    - ssh -p "$DEPLOY_SSH_PORT" -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_SERVER_IP" "
+      echo '🔐 Docker 레지스트리 로그인 시작...';
+      echo '$CI_REGISTRY_PASSWORD' | docker login -u '$CI_REGISTRY_ID' --password-stdin '$CI_REGISTRY';
+      echo '🐳 Docker 이미지 pull 시작...';
+      docker pull '${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}';
+      echo '⏹️ 기존 컨테이너 중지 및 삭제...';
+      docker stop demo-app || true;
+      docker rm demo-app || true;
+      echo '🚀 새 컨테이너 실행...';
+      docker run -d --name demo-app -p '$DEPLOY_APP_PORT:8080' '${CI_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${CI_PIPELINE_ID}';
+      echo '✅ 배포 완료';
+      "
+
