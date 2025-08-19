@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.response.ApiResponse;
+import com.example.response.ApiResponse;
 import com.example.spec.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

@@ -1,6 +1,6 @@
 package com.example.exception;
 
-import com.example.dto.response.ApiResponse;
+import com.example.response.ApiResponse;
 import com.example.enums.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,11 @@
-package com.example.dto.response;
+package com.example.response;
 
 import com.example.enums.ResultCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) //JSON 직렬화(객체를 JSON으로 변환)할 때, null 필드 제외
 public class ApiResponse<T> {
 
     private final String code;

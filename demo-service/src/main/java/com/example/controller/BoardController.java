@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.response.ApiResponse;
+import com.example.response.ApiResponse;
 import com.example.entity.Board;
 import com.example.spec.BoardService;
 import lombok.RequiredArgsConstructor;
