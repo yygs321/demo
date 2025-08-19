@@ -1,12 +1,14 @@
 plugins {
     id 'org.springframework.boot' version '3.3.2'
-    id 'java'
 }
 
 dependencies {
     implementation project(':demo-service')
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
 
-test {
-    useJUnitPlatform()
+bootJar {
+    mainClass = 'com.example.Main'
 }

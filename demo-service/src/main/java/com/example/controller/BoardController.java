@@ -4,7 +4,6 @@ import com.example.dto.response.ApiResponse;
 import com.example.entity.Board;
 import com.example.spec.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

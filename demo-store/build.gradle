@@ -5,10 +5,9 @@ plugins {
 dependencies {
     api project(':demo-domain')
 
+    //mariadb
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-}
 
-test {
-    useJUnitPlatform()
+    //mybatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 }

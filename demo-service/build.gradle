@@ -1,18 +1,15 @@
 plugins {
-    id 'org.springframework.boot' version '3.3.2'
-    id 'io.spring.dependency-management' version '1.1.7'
     id 'java-library'
+    id 'org.springframework.boot' version '3.3.2'
 }
-
-bootJar {
-    enabled = false
-}
-
 
 dependencies {
     api project(':demo-store')
 
-    //Transaction
+    //Valid 유효성 검사
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // 트랜잭션 관리
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     // Apache POI for Excel
@@ -22,6 +19,6 @@ dependencies {
     implementation 'org.apache.commons:commons-csv:1.10.0'
 }
 
-test {
-    useJUnitPlatform()
+bootJar {
+    enabled = false //메인 클래스 혼동되지 않도록
 }
