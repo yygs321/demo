@@ -41,11 +41,12 @@ public class FileServiceImpl implements FileService {
     @Value("${file.download.processed-dir}")
     private String processedDir;
 
-    @Value("${file.download.error-dir}")
-    private String errorDir;
-
     /**
      * API 요청으로 업로드된 Employee 관련 파일을 처리하여 DB에 저장
+     * 1. 유효성 검사
+     * 2. 파일 type(csv,excel) 파악
+     * 3. 데이터 파싱 및 저장(중복 검사 포함)
+     * 4. 오류 발생 시 오류파일 생성
      */
     @Override
     @Transactional
